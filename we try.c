@@ -1,41 +1,22 @@
-import freenove.processing.io.*;
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
-//Create a object of class PCF8574
-PCF8574 pcf = new PCF8574(0x27);
-Freenove_LCD1602 lcd;  //Create a lcd object
-String time = "";    
-String date = "";
+#define LED_PIN PC13
+#define LCD_ADDR 0x27 // Change to 0x3F if needed
+
+LiquidCrystal_I2C lcd(LCD_ADDR, 16, 2);
+
 void setup() {
-  size(640, 360);
-  lcd = new Freenove_LCD1602(pcf);
-  frameRate(2);    //set display window frame rate for 2 HZ
+    pinMode(LED_PIN, OUTPUT);
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("Hello World!");
 }
-void draw() {
-  background(255);
-  titleAndSiteInfo();
-  //get current time
-  time = nf(hour(), 2, 0) + ":" + nf(minute(), 2, 0) + ":" + nf(second(), 2, 0);  
-  //get current date 
-  date = nf(day(), 2, 0)+"/"+nf(month(), 2, 0)+"/"+nf(year(), 2, 0);
-  lcd.position(4, 0);  //show time on the lcd display
-  lcd.puts(time);
-  lcd.position(3, 1);  //show date on the lcd display
-  lcd.puts(date);
-  showTime(time, date);  //show time/date on the display window
-}
-void showTime(String time, String date) {
-  fill(0);
-  textAlign(CENTER, CENTER);
-  textSize(50);
-  text(time, width/2, height/2);
-  textSize(30);
-  text(date, width/2, height/2+50);
-}
-void titleAndSiteInfo() {
-  fill(0);
-  textAlign(CENTER);    //set the text centered
-  textSize(40);        //set text size
-  text("I2C-LCD1602", width / 2, 40);    //title
-  textSize(16);
-  text("www.freenove.com", width / 2, height - 20);    //site
+
+void loop() {
+    digitalWrite(LED_PIN, HIGH);
+    delay(300);
+    digitalWrite(LED_PIN, LOW);
+    delay(300);
 }
