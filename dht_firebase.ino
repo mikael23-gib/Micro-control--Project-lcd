@@ -75,32 +75,25 @@ void setup(){
 }
 
 void loop(){
- delay(1000);
+  delay(1000);
   float h = dht.readHumidity();
-
-  float t = dht.readTemperature();
+  float tC = dht.readTemperature(); // Read Celsius
+  float t = tC * 9.0 / 5.0 + 32.0;  // Convert to Fahrenheit
   
   if (Firebase.ready() && signupOK ) {
     
-    if (Firebase.RTDB.setFloat(&fbdo, "DHT/humidity",h)){
-//      Serial.println("PASSED");
-       Serial.print("Humidity: ");
-       Serial.println(h);
-      
-    }
-    else {
+    if (Firebase.RTDB.setFloat(&fbdo, "DHT/humidity", h)){
+      Serial.print("Humidity: ");
+      Serial.println(h);
+    } else {
       Serial.println("FAILED");
       Serial.println("REASON: " + fbdo.errorReason());
     }
-    
-    
-    // Write an Float number on the database path test/float
+
     if (Firebase.RTDB.setFloat(&fbdo, "DHT/temperature", t)){
-//      Serial.println("PASSED");
-       Serial.print("Temperature: ");
-       Serial.println(t);
-    }
-    else {
+      Serial.print("Temperature (F): ");
+      Serial.println(t);
+    } else {
       Serial.println("FAILED");
       Serial.println("REASON: " + fbdo.errorReason());
     }
